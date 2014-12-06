@@ -1,11 +1,10 @@
-print "Watch out, world!"
+print "Watch out, world"
 twitter = "@hearmecode"
 print twitter
 print "Welcome to Hear Me Code"#choose double or single quotes and stay consistent
 print 'No boys allowed!'
 print "Test print string"
 print "But 'this' is okay"
-
 print 'How about "this"'
 print "what about 'this'?"
 print "my governor's name is"#apostrophe okay
