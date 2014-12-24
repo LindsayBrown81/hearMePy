@@ -12,7 +12,6 @@
 # Making sandwich #2
 # All done; only had enough bread for 2 sandwiches.
 
-
 breadSlice = 6
 pbBlob = 3
 jellyBlob = 3

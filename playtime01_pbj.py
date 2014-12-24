@@ -27,7 +27,6 @@ else:
 	print "Goal 2: N/A How many classic sandwiches can I make? Answer: Zero, because I don't have the ingredients to make a classic sandwich."
 
 
-
 # Third Goal: Modify that program to allow you to make open-face sandwiches if you have an odd number of slices of bread ( )
 if breadSlice%2!=0:
 	if jellyBlob>=1 or pbBlob>=1:

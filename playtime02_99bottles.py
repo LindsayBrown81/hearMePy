@@ -229,7 +229,6 @@ for bottles in range(99,0,-1): #start, stop, step
 		plural = ""
 		print "{0} bottle{1} of beer on the wall, {0} bottle{1} of beer...\nIf one of those bottles should happen to fall,".format(bottles, plural, bottles, plural)
 
-
 	bottles = bottles - 1
 	if bottles != 1:
 		plural = "s"
