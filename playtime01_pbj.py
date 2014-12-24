@@ -1,9 +1,9 @@
 # Peanut Butter Jelly Time!
 
 # First Goal: Create a program that can tell you whether or not you can make a peanut butter and jelly sandwich
-breadSlice = 2
-jellyBlob = 1
-pbBlob = 2
+breadSlice = 6
+jellyBlob = 0
+pbBlob = 3
 
 weHaveASandwich = breadSlice >= 2 and jellyBlob >=1 and pbBlob >=1
 
@@ -19,8 +19,9 @@ else:
 
 
 # Second Goal: Modify that program to tell you: if you can make a classic sandwich, how many you can make
+noOfSandwich = min(breadSlice/2,jellyBlob,pbBlob)
 if weHaveASandwich == True:
-	noOfSandwich = min(breadSlice/2,jellyBlob,pbBlob)
+	#noOfSandwich = min(breadSlice/2,jellyBlob,pbBlob)
 	print "Goal 2: How many classic sandwiches can I make? Answer: {0}".format(noOfSandwich)
 else:
 	print "Goal 2: N/A How many classic sandwiches can I make? Answer: Zero, because I don't have the ingredients to make a classic sandwich."
@@ -35,10 +36,10 @@ else:
 	print "Goal 3: N/A Can I make an open-faced sandwich? Answer: No, I can't make an open-faced sandwich."
 
 #~I gave myself extra challenge for goal 3:
-noOfSandwich = min(breadSlice/2,jellyBlob,pbBlob)#Why did I need to redefine this variable again in order for the program to keep running?
-if breadSlice%2!=0:
+#noOfSandwich = min(breadSlice/2,jellyBlob,pbBlob)#Why did I need to redefine this variable again in order for the program to keep running? B/c I indented it above originally
+if breadSlice%2==1:
 	if jellyBlob>=1 or pbBlob>=1:
-		opnfSandwich = min( (noOfSandwich&breadSlice),max(jellyBlob-noOfSandwich,pbBlob-noOfSandwich) )#doesn't line doesn't work if breadSlice > 7, or jellyBlob = 0
+		opnfSandwich = min( (noOfSandwich&breadSlice),max(jellyBlob-noOfSandwich,pbBlob-noOfSandwich) )#this line doesn't work if breadSlice > 7, or jellyBlob = 0
 		if opnfSandwich != 1:
 			plural = "es"
 		else:
@@ -68,7 +69,7 @@ if jellyOpnfSandwich < 1:
 print "Goal 3 Bonus: What types of open-faced sandwich? Answer: Type Jelly: I can make {0} jelly open-faced sandwich{1}.".format(jellyOpnfSandwich, plural)
 
 
-# Fourth Goal: Modify that program to tell you: if you're missing ingredients, which ones you need to be able to make your ~open-faced~sandwiches
+# Fourth Goal: Modify that program to tell you: if you're missing ingredients, which ones you need to be able to make your ~open-faced sandwiches
 print "Goal 4: What missing ingredients do I need to buy to make more open-faced sandwiches?"
 #~I wish Python could return the variable name as a string, but Python doesn't do that well, or so I've read on stackoverflow. "A cat can't tell you its own name - someone else would need to tell you the cat's name.""
 
@@ -137,6 +138,10 @@ if breadSlice>=2:
 		print "I can't even make one of those half-assed peanut butter sandwiches."
 else:
 	print "I can make neither a peanut butter sandwich nor a jelly sandwich, but who wants to eat one of those anyway?"
+
+#Run this pbj program through the shell to use raw_input. I navigated to cd hearMePy directory from within shell, typed python then a space then the name of this file and then I was able to run program and use raw-input through terminal
+breadInquiry = raw_input("How many pieces of bread do I have left again?")
+print breadInquiry
 
 
 
