@@ -50,9 +50,6 @@
 	# 	surveyEmailList.append(email)
 	# print "\n",surveyEmailList
 
-# Reminder of Challenge 1: Open all_employees.csv and survey.csv and compare the two.  When an employee from survey.csv appears in all_employees.csv, 
-# print out the rest of their information from all_employees.csv.
-
 #~then, i'll use an if/else statement if email == email, wait, this sounds like mapping/matching keys (emails) and their values, meaning I need to create two dicts.
 #Or do I? ~~~Can't I search for matching values between two lists using keyword, in? The in keyword allows you to check whether a value exists in the list
 #From within allEmailList, I might ask, is "value" in surveyEmailList? If False, then surveyEmailList.append("value")
@@ -60,96 +57,141 @@
 #You know what? I think dicts were made for this type of key-value matching. Let's move forward with reading the csv files and getting their content into two dicts.
 
 # code below shows function on how to create dicts from reading csv files. source: https://github.com/shannonturner/python-lessons/blob/master/section_09_(functions)/csv_to_dict.py
-# I could have written one generic function
+#~line by line, I pasted first Shannon's, then Anupama,s, then my own
+
 # def csvtodict(filename):
-def csvtodict(survey):
-#   with open(filename, 'r') as csv_file:
-	with open("survey.csv", "r") as csv_file:#~I prefer double quotes. Also, quotes were needed around filename.
-#   	text = csv_file.read().strip().split('\n')
-		surveyText = csv_file.read().strip().split("\n")
-#   header_row = text[0].split(',')
-	header_row = surveyText[0].split(",")
-#	dictionary = {}
-	dictionarySurvey = {}
-#   for row, line in enumerate(text[1:]):
-	for row, line in enumerate(surveyText[1:]):
-#		dictionary[row] = {}
-		dictionarySurvey[row] = {}
-#       for col, cell in enumerate(line.split(',')):
-		for col, cell in enumerate(line.split(",")):
-#           dictionary[row][header_row[col]] = cell
-			dictionarySurvey[row][header_row[col]] = cell
-#   return dictionary
-	return dictionarySurvey
-# print csvtodict('events.csv')
-dictionarySurvey = csvtodict("survey.csv")
-print "\ndictionarySurvey is", dictionarySurvey
+def csvtodict(csv_file, k):
+##	with open(filename, 'r') as csv_file:#shan's function incorporates with open statement
+#										 #anu's function skips with open statement
+#	~Like Anu's, I will write one generic function that will be reusable in all with open, read statements from which we create dicts. I like the descriptive key "email," rather than an index number.
 
+##  	text = csv_file.read().strip().split('\n') 	#Shan's is indented here
+#	lines = csv_file.read().split("\n") 			#Anu's is not indented here. Not much difference other than that, functionally.
+	rows = csv_file.read().split("\n")
 
-def csvtodict(all):
-	with open("all_employees.csv", "r") as csv_file2:
-		text = csv_file2.read().strip().split("\n")
-	header_row = text[0].split(",")
+## 	header_row = text[0].split(',') 		#shan's saving header row to a var called header_row
+#	for index, line in enumerate(lines):	#anu's enumerting all rows, including header
+	for index, row in enumerate(rows): 
 
-	dictionary = {}
-	for row, line in enumerate(text[1:]):
-		dictionary[row] = {}
-		for col, cell in enumerate(line.split(",")):
-			dictionary[row][header_row[col]] = cell
-	return dictionary
-dictionaryAll = csvtodict("all_employees.csv")
-print "\ndictionaryAll is", dictionaryAll
+##	dict = {} 							#shan instantiates dict for entirety of csv's contents here
+#		lines[index] = line.split(",")	#anu's is still formatting her csv's rows and columns
+		rows[index] = row.split(",") 
 
+##	for row, line in enumerate(text[1:]): 	#drilling down a level, shan's enumerating all rows below the header
+	# 	stripped = [] 							#anu's stripping white space from all rows, lines 85-88
+	# 	for item in lines[index]:					#~~~question: can't .strip() method be run on strings? why did she need to create a list?
+	# 		stripped.append(item.strip())
+	# 	lines[index] = stripped	
+		stripped = []
+		for item in rows[index]:
+			stripped.append(item.strip())
+		rows[index] = stripped
+	
+##	dict[row] = {} #shan initializes nested dict here
+#	headers = lines.pop(0) #anu is making a list to store what will become the nested dict's keys
+	headers = rows.pop(0)
+	print "The headers are: ", headers
 
-#loop through dictionarySurvey, tell Python if email (key)'s value matches an email's value in dictionaryAll, then print dictionaryAll's whole value.
+##	for col, cell in enumerate(line.split(',')): #shan's splitting the columns by ,'s
+#	dict = {} #anu instantiates dict for entire csv contents here
+	dict = {}
 
-with open ("appended_survey.csv", "w") as appended_survey:
+##	dict[row][header_row[col]] = cell 	#shan's divvying up the header row into columns
+#	for line in lines: 					#anu's looping through all the rows in the csv
+	for row in rows:
+
+##	return dict 				#shan completes defining her function csvtodict		
+#		single_line_dict = {}	#anu's loop will create nested dicts for each row
+		single_row_dict = {}
+#		for header, element in zip(headers, line):#anu's looping through headers and all lines and zips them into a list, returns what will become keys and values as strings
+		for header, pair in zip(headers, row):
+#			single_line_dict[header] = element #returns properties (key, value pairs, i.e., "labels" and "details") as dict
+			single_row_dict[header] = pair
+#			#print "single_line_dict",single_line_dict
+		print "single_row_dict", single_row_dict #I chose to unindent print so wouldn't have to see every iteration of loop
+#		dict[single_line_dict.get(k)] = single_line_dict
+		dict[single_row_dict.get(k)] = single_row_dict
+#	return dict #the dicts from both all_employees.csv and survey.csv use "email" as the main key rather than an index number. 
+	return dict
+
+# print csvtodict run on both file handlers:
+with open("survey.csv", "r") as survey_file:#~I prefer double quotes. Also, quotes were needed around filename.
+	dictSurvey = csvtodict(survey_file, "email")
+	print "\ndictSurvey is", dictSurvey
+
+with open("all_employees.csv", "r") as all_file:
+	dictAll = csvtodict(all_file, "email")
+	print "\ndictAll is", dictAll
+
+# Reminder of Challenge 1: Open all_employees.csv and survey.csv and compare the two.  
+# When an employee from survey.csv appears in all_employees.csv, print out the rest of their information from all_employees.csv.
+#~~Ok, I think I'll loop through dictSurvey, tell Python if email (key) matches an email in dictAll, then print/write dictAll's key and value to a new csv file.
+
+with open ("write_survey.csv", "w") as write_survey:
 	append_survey_dict = {}
-	
-	for key, info in dictionaryAll.items():#items() now works like iteritems() in Python 2
-		#print "info",info #I see white space in ' email' and other sub keys or "labels" so I'll use .strip()
-		emailFromAll = {}
-		strippedLabelsAndDetails = []
-		for labelFromAll, details in info.items():
-			strippedLabelsAndDetails.append(labelFromAll.strip())
-		strippedLabelsAndDetails[4] = emailFromAll
-		#print strippedLabelsAndDetails[4]
-		print emailFromAll
-	
-	for key, info in dictionarySurvey.items():#items() now works like iteritems() in Python 2
-		#print "info",info #I see white space in ' email' and other sub keys or "labels" so I'll use .strip()
-		emailFromSurvey = {}
-		strippedLabelsAndDetails = []
-		for labelFromSurvey, details in info.items():
-			strippedLabelsAndDetails.append(labelFromSurvey.strip())
-		strippedLabelsAndDetails[1] = emailFromSurvey
-		#print strippedLabelsAndDetails[1]
-	
-
-		# individual_info = {}
-		# if dictionarySurvey.get(emailFromAll):#.get() returns a value for the given key. If key is not available, then returns default value None.
-		# 	print "\n{0} took the survey! Here is her contact information:".format(dictionaryAll.get(labelFromAll).get("name"))#.get("name"))
-		# 	print "Twitter: {0}".format(survey_dict.get(email).get("twitter"))
-		# 	print "Github: {0}".format(survey_dict.get(email).get("github"))
-		# 	print "Phone: {0}".format(emp_dict.get(email).get("phone"))
-		# 	single_emp_info["name"]=info.get("name")
-		# 	single_emp_info["email"]=email
-		# 	single_emp_info["phone"]=info.get("phone")
-		# 	single_emp_info["department"]=info.get("department")
-		# 	single_emp_info["position"]=info.get("position")
-		# 	single_emp_info["twitter"]=survey_dict.get(email).get("twitter")
-		# 	single_emp_info["github"]=survey_dict.get(email).get("github")
+	print "\nwrite_survey's info:"
+	for email, info in dictAll.items(): #items() method works in Python 2 like iteritems() did in Python 1
+#		print info
+#		for label, details in info.items():
+#			print label
+		ind_info = {}
+		if dictSurvey.get(email):#.get() returns a value for the given key. If key is not available, then returns default value None.
+				print "\n{0} took the survey! Here is her contact information:".format(dictAll.get(email).get("name"))
+		
 
 
 
-# for key, value in dictionarySurvey.items():
+
+
+		#emailFromAll = {}
+		# for label, details in info.items():
+		# 	print label
+			# for dept, ph, pos, name, email in label.items():
+			# 	print email
+		# 	labelFromAll[4]= emailFromAll
+		# print emailFromAll
+		
+		# for key, info in dictSurvey.items():#items() now works like iteritems() in Python 2
+		# 	print "info",info #I see white space in ' email' and other sub keys or "labels" so I'll use .strip()
+		# 	#emailFromSurvey = {}
+		# 	for label, details in info.items():
+		# 		print label
+				# for twit, git, email in label.items():
+				# 	print email
+			# 	labelFromSurvey[1]=emailFromSurvey 
+			# print emailFromAll
+			
+			
+			# 	print "Twitter: {0}".format(survey_dict.get(email).get("twitter"))
+			# 	print "Github: {0}".format(survey_dict.get(email).get("github"))
+			# 	print "Phone: {0}".format(emp_dict.get(email).get("phone"))
+			# 	ind_info["name"]=info.get("name")
+			#	ind_info["email"]=email
+			# 	ind_info["phone"]=info.get("phone")
+			# 	ind_info["department"]=info.get("department")
+			# 	ind_info["position"]=info.get("position")
+			# 	ind_info["twitter"]=survey_dict.get(email).get("twitter")
+			# 	ind_info["github"]=survey_dict.get(email).get("github")
+			# else:
+	 	# 		print "else nothing"
+			# #	ind_info["email"]=email
+			# # 	ind_info["phone"]=info.get("phone")
+			# # 	ind_info["department"]=info.get("department")
+			# # 	ind_info["position"]=info.get("position")
+			# # 	ind_info["twitter"]=""
+			# # 	ind_info["github"]=""
+			# append_survey_dict[key]=ind_info
+
+
+
+# for key, value in dictSurvey.items():
 # 	print key, value #printed the following:
 # # # 0 {' github': '@shannonturner', 'email': 'shannon@ijustworkhe.re', ' twitter': '@svt827'}
 # # # 1 {' github': '@bey', 'email': 'beyonce@beyonce.com', ' twitter': '@beyonce'}
 # # # 2 {' github': '@bubblegum', 'email': 'pb@candykingd.om', ' twitter': '@pbg'}
 # # # 3 {' github': '@maddowshow', 'email': 'rachel@maddow.com', ' twitter': '@maddow'}
 
-# # for value in dictionarySurvey.values():
+# # for value in dictSurvey.values():
 # #  	print value #printed the following:
 # # {' github': '@shannonturner', 'email': 'shannon@ijustworkhe.re', ' twitter': '@svt827'}
 # # {' github': '@bey', 'email': 'beyonce@beyonce.com', ' twitter': '@beyonce'}
